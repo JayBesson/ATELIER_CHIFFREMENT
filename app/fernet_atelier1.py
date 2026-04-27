@@ -6,9 +6,12 @@ def load_key():
     key = os.environ.get("FERNET_KEY")
     
     if not key:
-        print("❌ Erreur : La variable d'environnement 'FERNET_KEY' est introuvable.")
-        print(f"Variables disponibles : {list(os.environ.keys())[:5]}... (tronqué)")
-        sys.exit(1)
+        new_key = Fernet.generate_key()
+        print("⚠️  Aucune clé trouvée (FERNET_KEY). Voici une clé générée :")
+        print(new_key.decode())
+        print("\n➡️  Copie de la clé dans l'environnement :")
+        print("export FERNET_KEY='" + new_key.decode() + "'")
+        return new_key
         
     try:
         return key.encode()

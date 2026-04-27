@@ -1,18 +1,14 @@
 import argparse
 import os
 from pathlib import Path
-from cryptography import Fernet
+from cryptography.fernet import Fernet
 
 def get_fernet() -> Fernet:
     key = os.environ.get("FERNET_KEY")
     if not key:
         raise SystemExit("❌ FERNET_KEY non défini. Ex: export FERNET_KEY='...'\n"
                          "Tu peux générer une clé via: python -c \"from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())\"")
-    try:
-        return Fernet(key.encode())
-    except ValueError as e:
-        raise SystemExit(f"❌ Clé Fernet invalide: {e}\n"
-                         "Génère une nouvelle clé via: python -c \"from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())\"") from None
+    return Fernet(key.encode())
 
 def encrypt_file(input_path: Path, output_path: Path) -> None:
     f = get_fernet()
